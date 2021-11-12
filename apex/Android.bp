@@ -1,0 +1,23 @@
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+apex {
+    name: "com.android.sepolicy",
+    // TODO(jeffv): make it updatable
+    updatable: false,
+    manifest: "manifest.json",
+    file_contexts: ":com.android.sepolicy-file_contexts",
+    key: "com.android.sepolicy.key",
+    // TODO(jeffv): Making this platform signed for now for prototyping convencience,
+    // but eventually it needs to be signed with the key below.
+    certificate: "platform",
+
+    apps: ["SEPolicy"],
+}
+
+apex_key {
+    name: "com.android.sepolicy.key",
+    public_key: "com.android.sepolicy.avbpubkey",
+    private_key: "com.android.sepolicy.pem",
+}
