@@ -1,0 +1,14 @@
+package {
+    default_applicable_licenses: ["Android-Apache-2.0"],
+}
+
+android_app {
+    name: "SEPolicy",
+    // TODO(jeffv): Making this platform signed for now for prototyping convenience,
+    // but eventually it needs to be signed with a different key (perhaps the same as
+    // the apex?).
+    certificate: "platform",
+    asset_dirs: ["policy"],
+    sdk_version: "current",
+    apex_available: ["com.android.sepolicy"],
+}
