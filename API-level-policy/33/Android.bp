@@ -16,3 +16,22 @@
 package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
+
+android_app {
+    name: "SEPolicy-33",
+    // TODO(jeffv): for now, just include an empty policy. Later this needs
+    // to include policy from system/sepolicy/mainline (for example).
+    asset_dirs: ["policy"],
+    sdk_version: "current",
+    apex_available: ["com.android.sepolicy"],
+
+    // Prevent the AndroidManifest.xml from being modified by the build system.
+    dex_preopt: {
+        enabled: false,
+    },
+    optimize: {
+        enabled: false,
+    },
+    use_embedded_native_libs: true,
+}
+
