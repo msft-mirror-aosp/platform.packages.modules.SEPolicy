@@ -29,7 +29,7 @@ apex {
     certificate: "platform",
 
     apps: ["SEPolicy-33"],
-    prebuilts: ["SEPolicy-33.apk.sig"],
+    prebuilts: ["SEPolicy-33.apk.sig", "SEPolicy-33.apk.fsv_sig"],
 }
 
 apex_key {
@@ -48,6 +48,30 @@ filegroup {
     srcs: ["com.android.sepolicy.cert.pem"],
 }
 
+// openssl dgst -sign com.android.sepolicy.pem -keyform PEM -sha256 -out foo.sign
+// -binary $OUT/apex/com.android.sepolicy/app/SEPolicy-33/SEPolicy-33.apk
+genrule_defaults {
+    name: "sepolicy_sig_gen_default",
+    //tools: ["openssl"],
+    tool_files: [":SEPolicyKeyPem", ":SEPolicyCertPem"],
+    cmd: "openssl dgst -sign $(location :SEPolicyKeyPem) -keyform PEM -sha256 " +
+        "-out $(out) -binary $(in)"
+}
+
+genrule {
+    name: "SEPolicy-33.apk.sig.gen",
+    defaults: ["sepolicy_sig_gen_default"],
+    srcs: [":SEPolicy-33"],
+    out: ["SEPolicy-33.apk.sig.gen"],
+}
+
+prebuilt_etc {
+    name: "SEPolicy-33.apk.sig",
+    src: ":SEPolicy-33.apk.sig.gen",
+    installable: false,
+    filename: "SEPolicy-33.apk.sig",
+}
+
 genrule_defaults {
     name: "sepolicy_verity_sig_gen_default",
     tools: ["fsverity"],
@@ -62,23 +86,22 @@ genrule_defaults {
 }
 
 genrule {
-    name: "SEPolicy-33.apk.fsv_sig",
+    name: "SEPolicy-33.apk.fsv_sig.gen",
     defaults: ["sepolicy_verity_sig_gen_default"],
     srcs: [":SEPolicy-33"],
-    out: ["SEPolicy-33.apk.fsv_sig"],
+    out: ["SEPolicy-33.apk.fsv_sig.gen"],
 }
 
 prebuilt_etc {
-    name: "SEPolicy-33.apk.sig",
-    src: ":SEPolicy-33.apk.fsv_sig",
+    name: "SEPolicy-33.apk.fsv_sig",
+    src: ":SEPolicy-33.apk.fsv_sig.gen",
     installable: false,
     filename: "SEPolicy-33.apk.fsv_sig",
 }
 
 prebuilt_etc {
-    name: "com.android.sepolicy.cert.der",
+    name: "com.android.sepolicy.cert-debug.der",
     src: "com.android.sepolicy.cert.der",
-    sub_dir: "security/fsverity",
-    filename_from_src: true,
+    sub_dir: "selinux",
 }
 
