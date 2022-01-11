@@ -17,21 +17,74 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
-android_app {
+genrule {
     name: "SEPolicy-33",
-    // TODO(jeffv): for now, just include an empty policy. Later this needs
-    // to include policy from system/sepolicy/mainline (for example).
-    asset_dirs: ["policy"],
-    sdk_version: "current",
-    apex_available: ["com.android.sepolicy"],
+    defaults: ["sepolicy_create_zip_gen_default"],
+    srcs: [
+        ":apex_file_contexts-33",
+        ":apex_property_contexts-33",
+        ":apex_service_contexts-33",
+        ":apex_seapp_contexts-33",
+        ":apex_sepolicy-33.cil",
+        ":apex_sepolicy.sha256",
+        ":sepolicy_test",
 
-    // Prevent the AndroidManifest.xml from being modified by the build system.
-    dex_preopt: {
-        enabled: false,
-    },
-    optimize: {
-        enabled: false,
-    },
-    use_embedded_native_libs: true,
+    ],
+    out: ["SEPolicy-33.zip"],
 }
 
+prebuilt_etc {
+    name: "SEPolicy-33.zip",
+    src: ":SEPolicy-33",
+    installable: false,
+    filename: "SEPolicy-33.zip",
+}
+
+genrule {
+    name: "SEPolicy-33.zip.sig.gen",
+    defaults: ["sepolicy_sig_gen_default"],
+    srcs: [":SEPolicy-33.zip"],
+    out: ["SEPolicy-33.zip.sig.gen"],
+}
+
+prebuilt_etc {
+    name: "SEPolicy-33.zip.sig",
+    src: ":SEPolicy-33.zip.sig.gen",
+    installable: false,
+    filename: "SEPolicy-33.zip.sig",
+}
+
+genrule {
+    name: "SEPolicy-33.zip.fsv_sig.gen",
+    defaults: ["sepolicy_verity_sig_gen_default"],
+    srcs: [":SEPolicy-33.zip"],
+    out: ["SEPolicy-33.zip.fsv_sig.gen"],
+}
+
+prebuilt_etc {
+    name: "SEPolicy-33.zip.fsv_sig",
+    src: ":SEPolicy-33.zip.fsv_sig.gen",
+    installable: false,
+    filename: "SEPolicy-33.zip.fsv_sig",
+}
+
+// Versions of the most up-to-date apex sepolicies are installed on /system.
+prebuilt_etc {
+    name: "SEPolicy.zip",
+    src: ":SEPolicy-33",
+    relative_install_path: "selinux/apex",
+}
+
+prebuilt_etc {
+    name: "SEPolicy.zip.sig",
+    src: ":SEPolicy-33.zip.sig.gen",
+    filename: "SEPolicy.zip.sig",
+    relative_install_path: "selinux/apex",
+}
+
+prebuilt_etc {
+    name: "SEPolicy.zip.fsv_sig",
+    src: ":SEPolicy-33.zip.fsv_sig.gen",
+    filename: "SEPolicy.zip.fsv_sig",
+    relative_install_path: "selinux/apex",
+}
