@@ -48,8 +48,8 @@ genrule_defaults {
 }
 
 prebuilt_etc {
-    name: "sepolicy_test",
-    src: "sepolicy_test",
+    name: "sepolicy_apex_test_file",
+    src: "sepolicy_apex_test_file",
     filename: "apex_test",
     installable: false,
 }
