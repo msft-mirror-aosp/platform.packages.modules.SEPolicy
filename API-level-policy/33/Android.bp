@@ -68,6 +68,20 @@ prebuilt_etc {
     filename: "SEPolicy-33.zip.fsv_sig",
 }
 
+genrule {
+    name: "SEPolicy-33.pb.gen",
+    defaults: ["sepolicy_info_bin_gen_default"],
+    srcs: ["SEPolicy-33.textproto"],
+    out: ["SEPolicy-33.pb.gen"],
+}
+
+prebuilt_etc {
+    name: "SEPolicy-33.pb",
+    src: ":SEPolicy-33.pb.gen",
+    installable: false,
+    filename: "SEPolicy-33.pb",
+}
+
 // Versions of the most up-to-date apex sepolicies are installed on /system.
 prebuilt_etc {
     name: "SEPolicy.zip",
