@@ -26,6 +26,7 @@ genrule {
         ":apex_service_contexts-33",
         ":apex_seapp_contexts-33",
         ":apex_sepolicy-33.cil",
+        ":apex_sepolicy-33.decompiled.cil",
         ":apex_sepolicy.sha256",
         ":sepolicy_apex_test_file",
 
