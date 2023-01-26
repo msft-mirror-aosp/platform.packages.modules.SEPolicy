@@ -32,7 +32,7 @@ genrule_defaults {
     tool_files: [":SEPolicyKeyPem", ":SEPolicyCertPem"],
     // Use fsverity tool to generate the signature file which
     // will be stored in the apex.
-    // https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/fsverity-utils.git/tree/README.md
+    // https://git.kernel.org/pub/scm/fs/fsverity/fsverity-utils.git/tree/README.md
     cmd: "$(location fsverity) sign $(in) $(out) " +
         "--key=$(location :SEPolicyKeyPem) " +
         "--cert=$(location :SEPolicyCertPem) " +
